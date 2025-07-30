@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuestionarios y Editor de Python</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #240b4b;
+    }
+    h1.cursiva {
+      font-family: 'Cursive', 'Comic Sans MS', 'Brush Script MT', sans-serif;
+      font-style: italic;
+      font-size: 24px;
+      color: #f5c21a;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h2 {
+      color: #970d0d;
+    }
+    .quiz, .editor {
+      background: rgb(48, 89, 151);
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgb(249, 250, 250);
+    }
+    .question {
+      margin-bottom: 15px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 8px 16px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <ul class="menu">
+  <div class="contenedor">
+
+    <div class="izquierda">
+    <img src="software.png">
+    </div>
+
+  <div class="izquierda">
+  <a href="Python.html"><b>Inicio</b></a></li>
+  </div>
+
+  <div class="centro">
+  <li><a href="Historia.html"><b>¡Aprende más sobre Python</b></a></li>
+  </div>
+
+   <div class="centro">
+   <li><a href="Información.html"><b>Más información sore el proyecto</b></a></li>
+  </div>
+
+  <div class="derecha">
+  <li><a href="Instalación.html"><b>Videos para instalar Python</b></a></li>
+  </ul></div>
+  <h1 class="cursiva"></h1>
+
+  <h2>Cuestionario 1: Fundamentos de Python</h2>
+  <div class="quiz" id="quiz1"></div>
+
+  <h2>Cuestionario 2: Sintaxis y Funciones</h2>
+  <div class="quiz" id="quiz2"></div>
+
+  <h2>Mini Editor de Código (Python)</h2>
+  <div class="editor">
+    <textarea id="codeEditor" placeholder="Escribe tu código Python aquí..."></textarea>
+    <button onclick="runCode()">Ejecutar (solo simulado)</button>
+    <pre id="output">Salida simulada aquí...</pre>
+  </div>
+
+  <script>
+    const quizzes = {
+      quiz1: [
+        { q: "1. ¿Qué tipo de lenguaje es Python?", options: ["Compilado", "Interpretado", "Binario"], answer: 1 },
+        { q: "2. ¿Cómo se declara una variable?", options: ["int x = 5", "x = 5", "var x = 5"], answer: 1 },
+        { q: "3. ¿Qué imprime print(2 ** 3)?", options: ["5", "6", "8"], answer: 2 },
+        { q: "4. ¿Qué significa 'len'?", options: ["Longitud", "Sumar", "Convertir"], answer: 0 },
+        { q: "5. ¿Qué tipo de dato es True?", options: ["Int", "Bool", "String"], answer: 1 },
+        { q: "6. ¿Cuál es el símbolo para comentario?", options: ["//", "/* */", "#"], answer: 2 },
+        { q: "7. ¿Cómo se crea una lista?", options: ["()", "{}", "[]"], answer: 2 },
+        { q: "8. ¿Qué hace 'input()'?", options: ["Muestra texto", "Recibe texto", "Cierra programa"], answer: 1 },
+        { q: "9. ¿Qué operador se usa para igualdad?", options: ["=", "==", "==="], answer: 1 },
+        { q: "10. ¿Python es sensible a mayúsculas?", options: ["Sí", "No"], answer: 0 }
+      ],
+      quiz2: [
+        { q: "1. ¿Cómo se define una función?", options: ["func myFunc():", "def myFunc():", "function myFunc()"], answer: 1 },
+        { q: "2. ¿Qué estructura repite un bloque?", options: ["if", "while", "break"], answer: 1 },
+        { q: "3. ¿Cuál NO es un tipo válido?", options: ["list", "tuple", "fractional"], answer: 2 },
+        { q: "4. ¿Qué hace 'range(5)'?", options: ["[0,1,2,3,4]", "[1,2,3,4,5]", "[5]"], answer: 0 },
+        { q: "5. ¿Cómo se accede al segundo elemento de una lista?", options: ["lista[2]", "lista(1)", "lista[1]"], answer: 2 },
+        { q: "6. ¿Qué hace 'return' en una función?", options: ["Imprime", "Sale", "Devuelve un valor"], answer: 2 },
+        { q: "7. ¿Qué hace 'break'?", options: ["Termina bucle", "Repite bucle", "Ignora condición"], answer: 0 },
+        { q: "8. ¿Qué significa 'elif'?", options: ["Sino", "Si no si", "Error"], answer: 1 },
+        { q: "9. ¿Qué hace 'str(5)'?", options: ["Convierte a string", "Multiplica", "Nada"], answer: 0 },
+        { q: "10. ¿Cómo se importa una librería?", options: ["include os", "import os", "use os"], answer: 1 }
+      ]
+    };
+
+    function renderQuiz(id, quizData) {
+      const container = document.getElementById(id);
+      quizData.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.classList.add("question");
+        div.innerHTML = `<strong>${q.q}</strong><br>` +
+          q.options.map((opt, idx) =>
+            `<label><input type="radio" name="${id}_q${i}" value="${idx}"> ${opt}</label><br>`).join("");
+        container.appendChild(div);
+      });
+
+      const btn = document.createElement("button");
+      btn.textContent = "Validar respuestas";
+      btn.onclick = () => validateQuiz(id, quizData);
+      container.appendChild(btn);
+
+      const result = document.createElement("div");
+      result.classList.add("result");
+      result.id = `${id}_result`;
+      container.appendChild(result);
+    }
+
+    function validateQuiz(id, quizData) {
+      let score = 0;
+      quizData.forEach((q, i) => {
+        const radios = document.getElementsByName(`${id}_q${i}`);
+        radios.forEach((r, idx) => {
+          if (r.checked && parseInt(r.value) === q.answer) score++;
+        });
+      });
+      document.getElementById(`${id}_result`).textContent = `Tu puntaje: ${score} de ${quizData.length}`;
+    }
+
+    function runCode() {
+      const code = document.getElementById("codeEditor").value;
+      const output = document.getElementById("output");
+      if (code.toLowerCase().includes("print")) {
+        const match = code.match(/print\(([^)]+)\)/);
+        output.textContent = "Simulando salida de: " + (match ? match[1] : "...");
+      } else {
+        output.textContent = "Código recibido (simulado), sin salida.";
+      }
+    }
+
+    // Renderizar cuestionarios
+    renderQuiz("quiz1", quizzes.quiz1);
+    renderQuiz("quiz2", quizzes.quiz2);
+  </script>
+
+</body>
+</html>
